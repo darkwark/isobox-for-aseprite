@@ -72,7 +72,7 @@ local maxSize = {
   z = math.floor(app.activeSprite.height/2)
 }
 
-
+local separatedLayer = true
 
 ---------------------------------------
 -- Colors Utility --
@@ -96,21 +96,65 @@ local function isColorEqualAt(x, y, color)
 
   return isColorEqual(pickedColor, color)
 end
+List = {}
+function List.new()
+	return { first = 0, last = -1}
+end
+function List.pushleft (list, value)
+  local first = list.first - 1
+  list.first = first
+  list[first] = value
+end
 
+function List.pushright (list, value)
+  local last = list.last + 1
+  list.last = last
+  list[last] = value
+end
+
+function List.popleft (list)
+  local first = list.first
+  if first > list.last then error("list is empty") end
+  local value = list[first]
+  list[first] = nil        -- to allow garbage collection
+  list.first = first + 1
+  return value
+end
+
+function List.popright (list)
+  local last = list.last
+  if list.first > last then error("list is empty") end
+  local value = list[last]
+  list[last] = nil         -- to allow garbage collection
+  list.last = last - 1
+  return value
+end
 ---------------------------------------
 -- Flood Fill --
 -- Paint Bucket Tool implementation --
 ---------------------------------------
 local function floodFill(x, y, targetColor, replacementColor)
   if isColorEqual(targetColor, replacementColor) then return end
-  if not isColorEqualAt(x, y, targetColor) then return end
+  local pixelList = List.new()
+  local p = {x, y}
+  List.pushright(pixelList, p)
   
-  app.activeImage:putPixel(x, y, replacementColor)
-  
-  floodFill(x+1, y, targetColor, replacementColor)
-  floodFill(x-1, y, targetColor, replacementColor)
-  floodFill(x, y+1, targetColor, replacementColor)
-  floodFill(x, y-1, targetColor, replacementColor)
+  local cx
+  local cy
+  while(pixelList.last ~= -1) do
+    local p = List.popright(pixelList)
+    cx = p[1]
+    cy = p[2]
+	
+    if isColorEqualAt(cx, cy, targetColor) then
+	  --app.alert("Filling " .. cx .. ", " .. cy)
+      app.activeImage:putPixel(cx, cy, replacementColor)
+      List.pushright(pixelList, {cx-1,cy})
+      List.pushright(pixelList, {cx+1,cy})
+      List.pushright(pixelList, {cx,cy+1})
+      List.pushright(pixelList, {cx,cy-1})
+    end
+  end
 end
 
 ---------------------------------------
@@ -272,16 +316,23 @@ dlg   :separator{ text="Size:" }
       :radio {id="typeTwo", text="2 px", selected=not use3pxCorner}
 
       :separator()
+	  :check {id="sepLayer", label="New Layer:", selected=seperatedLayer, onclick=function()
+		local sl = not separatedLayer
+		separatedLayer = sl
+		end
+	  }
+	  :separator()
       :button {id="ok", text="Add Box",onclick=function()
           local data = dlg.data
-          app.transaction(function()
-            local cubeType = data.typeOne and 1 or 2
-
-            newLayer("Cube("..data.xSize.." "..data.ySize.." "..data.zSize..")")
-            drawCube(cubeType, data.xSize, data.ySize, data.zSize, data.color)
-            fillCubeSides(data.topColor, data.leftColor, data.rightColor)
-            addHighlight(cubeType, data.xSize, data.ySize, data.zSize, data.highlightColor)
-          end)
+          --app.transaction(function()
+		local cubeType = data.typeOne and 1 or 2
+		
+		newLayer("Cube("..data.xSize.." "..data.ySize.." "..data.zSize..")")
+		drawCube(cubeType, data.xSize, data.ySize, data.zSize, data.color)
+		fillCubeSides(data.topColor, data.leftColor, data.rightColor)
+		addHighlight(cubeType, data.xSize, data.ySize, data.zSize, data.highlightColor)
+		if(not separatedLayer) then app.command.MergeDownLayer() end
+          --end)
           --Refresh screen
           app.command.Undo()
           app.command.Redo()
