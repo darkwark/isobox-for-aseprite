@@ -6,9 +6,10 @@ This script lets you create boxes of various sizes in [Aseprite](https://www.ase
 You can set a custom color for each of the sides, set a highlight and stroke color. You can also choose between two types of the corners: 2px and 3px. You can read more about the differences [here](http://www.gas13.ru/v3/tutorials/isometric_pixelart_tutorial_the_two_types.php).
 
 There are two versions of the script: Regular and Lite. Lite version generates a stroke only boxes, intended for quick prototyping with basic wired box without any colors. 
+
 ![](./screenshots/screenshot-3.gif)
 
-Using Regular version you can set a custom color for each of the sides of the box. By default it will generate shades of your current foreground color.
+Using Regular version you can set a custom color for each of the sides of the box. By default it will generate shades of your current foreground color. 
 
 ![](./screenshots/screenshot-2.png)
 
