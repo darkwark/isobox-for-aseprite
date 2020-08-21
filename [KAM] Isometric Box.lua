@@ -1,20 +1,33 @@
 --[[---------------------------------------------------------------------
-                                        __
+     ,. -  .,                             _,.,  °                    ,.,   '               ,.  '       
+   ,' ,. -  .,  `' ·,               ,.·'´  ,. ,  `;\ '                ;´   '· .,            /   ';\       
+   '; '·~;:::::'`,   ';\          .´   ;´:::::\`'´ \'\              .´  .-,    ';\        ,'   ,'::'\      
+    ;   ,':\::;:´  .·´::\'       /   ,'::\::::::\:::\:'            /   /:\:';   ;:'\'     ,'    ;:::';'     
+    ;  ·'-·'´,.-·'´:::::::';     ;   ;:;:-·'~^ª*';\'´            ,'  ,'::::'\';  ;::';     ';   ,':::;'      
+  ;´    ':,´:::::::::::·´'      ;  ,.-·:*'´¨'`*´\::\ '       ,.-·'  '·~^*'´¨,  ';::;     ;  ,':::;' '      
+   ';  ,    `·:;:-·'´          ;   ;\::::::::::::'\;'        ':,  ,·:²*´¨¯'`;  ;::';    ,'  ,'::;'         
+   ; ,':\'`:·.,  ` ·.,         ;  ;'_\_:;:: -·^*';\        ,'  / \::::::::';  ;::';    ;  ';_:,.-·´';\  
+   \·-;::\:::::'`:·-.,';       ';    ,  ,. -·:*'´:\:'\°     ,' ,'::::\·²*'´¨¯':,'\:;     ',   _,.-·'´:\:\ 
+    \::\:;'` ·:;:::::\::\'      \`*´ ¯\:::::::::::\;' '    \`¨\:::/          \::\'      \¨:::::::::::\'; 
+     '·-·'       `' · -':::''       \:::::\;::-·^*'´          '\::\;'            '\;'  '     '\;::_;:-·'´   
+                                   `*´¯                     `¨'                          '¨                                                   __
  __                                    /\ \__         __
 /\_\    ____    ___     ___ ___      __\ \ ,_\  _ __ /\_\    ___
 \/\ \  /',__\  / __`\ /' __` __`\  /'__`\ \ \/ /\`'__\/\ \  /'___\
  \ \ \/\__, `\/\ \L\ \/\ \/\ \/\ \/\  __/\ \ \_\ \ \/ \ \ \/\ \__/
   \ \_\/\____/\ \____/\ \_\ \_\ \_\ \____\\ \__\\ \_\  \ \_\ \____\
    \/_/\/___/  \/___/  \/_/\/_/\/_/\/____/ \/__/ \/_/   \/_/\/____/
- __                            _          __
-/\ \                         /' \       /'__`\
-\ \ \____    ___   __  _    /\_, \     /\ \/\ \
- \ \ '__`\  / __`\/\ \/'\   \/_/\ \    \ \ \ \ \
-  \ \ \L\ \/\ \L\ \/>  </      \ \ \  __\ \ \_\ \
-   \ \_,__/\ \____//\_/\_\      \ \_\/\_\\ \____/
-    \/___/  \/___/ \//\/_/       \/_/\/_/ \/___/
+
+ /$$                                   /$$         /$$  
+| $$                                 /$$$$       /$$$$  
+| $$$$$$$   /$$$$$$  /$$   /$$      |_  $$      |_  $$  
+| $$__  $$ /$$__  $$|  $$ /$$/        | $$        | $$  
+| $$  \ $$| $$  \ $$ \  $$$$/         | $$        | $$  
+| $$  | $$| $$  | $$  >$$  $$         | $$        | $$  
+| $$$$$$$/|  $$$$$$/ /$$/\  $$       /$$$$$$ /$$ /$$$$$$
+|_______/  \______/ |__/  \__/      |______/|__/|______/
       
-  ISOMETRIC BOX GENERATOR 1.0 for Aseprite (https://aseprite.org)
+  -REAL- ISOMETRIC BOX GENERATOR 1.1 for Aseprite (https://aseprite.org)
   Project page: https://darkwark.itch.io/isobox-for-aseprite
    
     by Kamil Khadeyev (@darkwark)
@@ -22,7 +35,11 @@
     Dribbble: http://dribbble.com/darkwark
     Website: http://darkwark.com
 
-  (c) 2018, November 
+    corrected by pablo g. rubio (@pagoru) ALONE
+    Twitter: http://twitter.com/pagoru
+
+
+  (c) 2020, Pandemic 
   All rights reserved or something
   
   Features:
@@ -32,7 +49,7 @@
     + Two types of the box: 3px and 2px corner
   
   Requirements:
-    + Aseprite 1.2.10-beta2
+    + Aseprite >= 1.2
     + Color Mode: RGBA
   
   Installation:
@@ -223,7 +240,7 @@ local function fillCubeSides(topColor, leftColor, rightColor)
   floodFill(centerX+1, centerY+1, TRANSPARENT_COLOR, colorAsPixel(rightColor))
 end
 
-local function addHighlight(type, xSize, ySize, zSize, color)
+local function addHighlight(type, xSize, ySize, zSize, topColor, leftColor)
   local centerX = math.floor(app.activeSprite.width/2)
   local centerY = math.floor(app.activeSprite.height/2)
   
@@ -231,11 +248,9 @@ local function addHighlight(type, xSize, ySize, zSize, color)
   -- TYPE2 is for 2px in the middle
   local alt = (type == 1) and 0 or 1
   
-  isoLineUpRight(color, centerX-alt, centerY, xSize-1)
-  isoLineUpLeft(color, centerX, centerY, ySize-1) 
-  vLine(color, centerX-alt, centerY, zSize-1)
-  
-  app.activeImage:putPixel(centerX-alt, centerY, app.pixelColor.rgba(255, 255, 255, 255))
+  isoLineUpRight(topColor, centerX-alt, centerY, xSize-1)
+  isoLineUpLeft(topColor, centerX, centerY, ySize-1) 
+  vLine(leftColor, centerX-alt, centerY, zSize-1)
 end
 
 ---------------------------------------
@@ -280,7 +295,7 @@ dlg   :separator{ text="Size:" }
             newLayer("Cube("..data.xSize.." "..data.ySize.." "..data.zSize..")")
             drawCube(cubeType, data.xSize, data.ySize, data.zSize, data.color)
             fillCubeSides(data.topColor, data.leftColor, data.rightColor)
-            addHighlight(cubeType, data.xSize, data.ySize, data.zSize, data.highlightColor)
+            addHighlight(cubeType, data.xSize, data.ySize, data.zSize, data.topColor, data.leftColor)
           end)
           --Refresh screen
           app.command.Undo()
