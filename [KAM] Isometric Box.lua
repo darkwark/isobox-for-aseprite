@@ -280,11 +280,6 @@ dlg   :separator{ text="Size:" }
       :color {id="topColor", label="Top:", color = colors.top}
       :color {id="leftColor", label="Left:", color = colors.left}
       :color {id="rightColor", label="Right:", color = colors.right}
-      :color {id="highlightColor", label="Highlight:", color = colors.highlight}
-
-      :separator()
-      :radio {id="typeOne", label="Corner:", text="3 px", selected=use3pxCorner}
-      :radio {id="typeTwo", text="2 px", selected=not use3pxCorner}
 
       :separator()
       :button {id="ok", text="Add Box",onclick=function()
