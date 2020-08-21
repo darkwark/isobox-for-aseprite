@@ -269,7 +269,7 @@ end
 ---------------------------------------
 -- USER INTERFACE --
 ---------------------------------------
-local dlg = Dialog("[KAM] Isometric Box")
+local dlg = Dialog("^\\,._-(REAL)-_.,/^  -- (K) -- Isometric Box  ")
 dlg   :separator{ text="Size:" }
       :slider {id="ySize", label="Left:", min=1, max=maxSize.y, value=5}
       :slider {id="xSize", label="Right:", min=1, max=maxSize.x, value=5}
