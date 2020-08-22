@@ -38,8 +38,9 @@
     corrected by pablo g. rubio (@pagoru) ALONE
     Twitter: http://twitter.com/pagoru
 
+    Lo siento pero me ponian demasiado nervioso esos bordes. Att: Aok.
 
-  (c) 2020, Pandemic 
+  (c) 2020, Pandemic +1
   All rights reserved or something
   
   Features:
@@ -190,7 +191,7 @@ end
 ---------------------------------------
 -- FINAL CUBE --
 ---------------------------------------
-local function drawCube(type, xSize, ySize, zSize, color)
+local function drawCube(type, xSize, ySize, zSize, color, topColor, leftColor, rightColor)
   --[[
     Dimensions:
       X: right side
@@ -210,17 +211,18 @@ local function drawCube(type, xSize, ySize, zSize, color)
   --top plane
   isoLineUpRight(color, centerX-a, centerY, xSize) --bottom right
   isoLineUpLeft(color, centerX, centerY, ySize) --bottom left
-  isoLineUpLeft(color, centerX+xSize*2+b, centerY-xSize, ySize) --top right
-  isoLineUpRight(color, centerX-ySize*2-1, centerY-ySize, xSize) --top left
+  isoLineUpLeft(topColor, centerX+xSize*2+b, centerY-xSize, ySize) --top right
+  isoLineUpRight(topColor, centerX-ySize*2-1, centerY-ySize, xSize) --top left
 
   --bottom plane
-  isoLineUpRight(color, centerX-a, centerY+zSize, xSize) --right
-  isoLineUpLeft(color, centerX, centerY+zSize, ySize) --left
+  isoLineUpRight(rightColor, centerX-a, centerY+zSize, xSize) --right
+  isoLineUpLeft(leftColor, centerX, centerY+zSize, ySize) --left
+  isoLineUpRight(rightColor, centerX-a, centerY+zSize, xSize)
 
   --vertical lines
-  vLine(color, centerX-a, centerY, zSize) --middle
-  vLine(color, centerX-ySize*2-1, centerY-ySize, zSize) --left
-  vLine(color, centerX+xSize*2+b, centerY-xSize, zSize) --right
+  vLine(leftColor, centerX-a, centerY, zSize) --middle
+  vLine(leftColor, centerX-ySize*2-1, centerY-ySize, zSize) --left
+  vLine(rightColor, centerX+xSize*2+b, centerY-xSize, zSize) --right
 end
 
 
@@ -276,7 +278,7 @@ dlg   :separator{ text="Size:" }
       :slider {id="zSize", label="Height:", min=3, max=maxSize.z, value=10}
 
       :separator{ text="Colors:" }
-      :color {id="color", label="Stroke:", color = colors.stroke}
+      --:color {id="color", label="Stroke:", color = colors.stroke}
       :color {id="topColor", label="Top:", color = colors.top}
       :color {id="leftColor", label="Left:", color = colors.left}
       :color {id="rightColor", label="Right:", color = colors.right}
@@ -288,7 +290,7 @@ dlg   :separator{ text="Size:" }
             local cubeType = data.typeOne and 1 or 2
 
             newLayer("Cube("..data.xSize.." "..data.ySize.." "..data.zSize..")")
-            drawCube(cubeType, data.xSize, data.ySize, data.zSize, data.color)
+            drawCube(cubeType, data.xSize, data.ySize, data.zSize, data.color, data.topColor, data.leftColor, data.rightColor)
             fillCubeSides(data.topColor, data.leftColor, data.rightColor)
             addHighlight(cubeType, data.xSize, data.ySize, data.zSize, data.topColor, data.leftColor)
           end)
@@ -300,4 +302,3 @@ dlg   :separator{ text="Size:" }
       :show{wait=false}
 
 ---------------------------------------
-
