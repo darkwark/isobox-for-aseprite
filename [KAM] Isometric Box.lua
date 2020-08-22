@@ -1,20 +1,33 @@
 --[[---------------------------------------------------------------------
-                                        __
+     ,. -  .,                             _,.,  °                    ,.,   '               ,.  '       
+   ,' ,. -  .,  `' ·,               ,.·'´  ,. ,  `;\ '                ;´   '· .,            /   ';\       
+   '; '·~;:::::'`,   ';\          .´   ;´:::::\`'´ \'\              .´  .-,    ';\        ,'   ,'::'\      
+    ;   ,':\::;:´  .·´::\'       /   ,'::\::::::\:::\:'            /   /:\:';   ;:'\'     ,'    ;:::';'     
+    ;  ·'-·'´,.-·'´:::::::';     ;   ;:;:-·'~^ª*';\'´            ,'  ,'::::'\';  ;::';     ';   ,':::;'      
+  ;´    ':,´:::::::::::·´'      ;  ,.-·:*'´¨'`*´\::\ '       ,.-·'  '·~^*'´¨,  ';::;     ;  ,':::;' '      
+   ';  ,    `·:;:-·'´          ;   ;\::::::::::::'\;'        ':,  ,·:²*´¨¯'`;  ;::';    ,'  ,'::;'         
+   ; ,':\'`:·.,  ` ·.,         ;  ;'_\_:;:: -·^*';\        ,'  / \::::::::';  ;::';    ;  ';_:,.-·´';\  
+   \·-;::\:::::'`:·-.,';       ';    ,  ,. -·:*'´:\:'\°     ,' ,'::::\·²*'´¨¯':,'\:;     ',   _,.-·'´:\:\ 
+    \::\:;'` ·:;:::::\::\'      \`*´ ¯\:::::::::::\;' '    \`¨\:::/          \::\'      \¨:::::::::::\'; 
+     '·-·'       `' · -':::''       \:::::\;::-·^*'´          '\::\;'            '\;'  '     '\;::_;:-·'´   
+                                   `*´¯                     `¨'                          '¨                                                   __
  __                                    /\ \__         __
 /\_\    ____    ___     ___ ___      __\ \ ,_\  _ __ /\_\    ___
 \/\ \  /',__\  / __`\ /' __` __`\  /'__`\ \ \/ /\`'__\/\ \  /'___\
  \ \ \/\__, `\/\ \L\ \/\ \/\ \/\ \/\  __/\ \ \_\ \ \/ \ \ \/\ \__/
   \ \_\/\____/\ \____/\ \_\ \_\ \_\ \____\\ \__\\ \_\  \ \_\ \____\
    \/_/\/___/  \/___/  \/_/\/_/\/_/\/____/ \/__/ \/_/   \/_/\/____/
- __                            _          __
-/\ \                         /' \       /'__`\
-\ \ \____    ___   __  _    /\_, \     /\ \/\ \
- \ \ '__`\  / __`\/\ \/'\   \/_/\ \    \ \ \ \ \
-  \ \ \L\ \/\ \L\ \/>  </      \ \ \  __\ \ \_\ \
-   \ \_,__/\ \____//\_/\_\      \ \_\/\_\\ \____/
-    \/___/  \/___/ \//\/_/       \/_/\/_/ \/___/
+
+ /$$                                   /$$         /$$  
+| $$                                 /$$$$       /$$$$  
+| $$$$$$$   /$$$$$$  /$$   /$$      |_  $$      |_  $$  
+| $$__  $$ /$$__  $$|  $$ /$$/        | $$        | $$  
+| $$  \ $$| $$  \ $$ \  $$$$/         | $$        | $$  
+| $$  | $$| $$  | $$  >$$  $$         | $$        | $$  
+| $$$$$$$/|  $$$$$$/ /$$/\  $$       /$$$$$$ /$$ /$$$$$$
+|_______/  \______/ |__/  \__/      |______/|__/|______/
       
-  ISOMETRIC BOX GENERATOR 1.0 for Aseprite (https://aseprite.org)
+  -REAL- ISOMETRIC BOX GENERATOR 1.1 for Aseprite (https://aseprite.org)
   Project page: https://darkwark.itch.io/isobox-for-aseprite
    
     by Kamil Khadeyev (@darkwark)
@@ -22,7 +35,12 @@
     Dribbble: http://dribbble.com/darkwark
     Website: http://darkwark.com
 
-  (c) 2018, November 
+    corrected by pablo g. rubio (@pagoru) ALONE
+    Twitter: http://twitter.com/pagoru
+
+    Lo siento pero me ponian demasiado nervioso esos bordes. Att: Aok.
+
+  (c) 2020, Pandemic +1
   All rights reserved or something
   
   Features:
@@ -32,7 +50,7 @@
     + Two types of the box: 3px and 2px corner
   
   Requirements:
-    + Aseprite 1.2.10-beta2
+    + Aseprite >= 1.2
     + Color Mode: RGBA
   
   Installation:
@@ -173,7 +191,7 @@ end
 ---------------------------------------
 -- FINAL CUBE --
 ---------------------------------------
-local function drawCube(type, xSize, ySize, zSize, color)
+local function drawCube(type, xSize, ySize, zSize, color, topColor, leftColor, rightColor)
   --[[
     Dimensions:
       X: right side
@@ -193,17 +211,18 @@ local function drawCube(type, xSize, ySize, zSize, color)
   --top plane
   isoLineUpRight(color, centerX-a, centerY, xSize) --bottom right
   isoLineUpLeft(color, centerX, centerY, ySize) --bottom left
-  isoLineUpLeft(color, centerX+xSize*2+b, centerY-xSize, ySize) --top right
-  isoLineUpRight(color, centerX-ySize*2-1, centerY-ySize, xSize) --top left
+  isoLineUpLeft(topColor, centerX+xSize*2+b, centerY-xSize, ySize) --top right
+  isoLineUpRight(topColor, centerX-ySize*2-1, centerY-ySize, xSize) --top left
 
   --bottom plane
-  isoLineUpRight(color, centerX-a, centerY+zSize, xSize) --right
-  isoLineUpLeft(color, centerX, centerY+zSize, ySize) --left
+  isoLineUpRight(rightColor, centerX-a, centerY+zSize, xSize) --right
+  isoLineUpLeft(leftColor, centerX, centerY+zSize, ySize) --left
+  isoLineUpRight(rightColor, centerX-a, centerY+zSize, xSize)
 
   --vertical lines
-  vLine(color, centerX-a, centerY, zSize) --middle
-  vLine(color, centerX-ySize*2-1, centerY-ySize, zSize) --left
-  vLine(color, centerX+xSize*2+b, centerY-xSize, zSize) --right
+  vLine(leftColor, centerX-a, centerY, zSize) --middle
+  vLine(leftColor, centerX-ySize*2-1, centerY-ySize, zSize) --left
+  vLine(rightColor, centerX+xSize*2+b, centerY-xSize, zSize) --right
 end
 
 
@@ -223,7 +242,7 @@ local function fillCubeSides(topColor, leftColor, rightColor)
   floodFill(centerX+1, centerY+1, TRANSPARENT_COLOR, colorAsPixel(rightColor))
 end
 
-local function addHighlight(type, xSize, ySize, zSize, color)
+local function addHighlight(type, xSize, ySize, zSize, topColor, leftColor)
   local centerX = math.floor(app.activeSprite.width/2)
   local centerY = math.floor(app.activeSprite.height/2)
   
@@ -231,11 +250,9 @@ local function addHighlight(type, xSize, ySize, zSize, color)
   -- TYPE2 is for 2px in the middle
   local alt = (type == 1) and 0 or 1
   
-  isoLineUpRight(color, centerX-alt, centerY, xSize-1)
-  isoLineUpLeft(color, centerX, centerY, ySize-1) 
-  vLine(color, centerX-alt, centerY, zSize-1)
-  
-  app.activeImage:putPixel(centerX-alt, centerY, app.pixelColor.rgba(255, 255, 255, 255))
+  isoLineUpRight(topColor, centerX-alt, centerY, xSize-1)
+  isoLineUpLeft(topColor, centerX, centerY, ySize-1) 
+  vLine(leftColor, centerX-alt, centerY, zSize-1)
 end
 
 ---------------------------------------
@@ -254,22 +271,17 @@ end
 ---------------------------------------
 -- USER INTERFACE --
 ---------------------------------------
-local dlg = Dialog("[KAM] Isometric Box")
+local dlg = Dialog("^\\,._-(REAL)-_.,/^  -- (K) -- Isometric Box  ")
 dlg   :separator{ text="Size:" }
       :slider {id="ySize", label="Left:", min=1, max=maxSize.y, value=5}
       :slider {id="xSize", label="Right:", min=1, max=maxSize.x, value=5}
       :slider {id="zSize", label="Height:", min=3, max=maxSize.z, value=10}
 
       :separator{ text="Colors:" }
-      :color {id="color", label="Stroke:", color = colors.stroke}
+      --:color {id="color", label="Stroke:", color = colors.stroke}
       :color {id="topColor", label="Top:", color = colors.top}
       :color {id="leftColor", label="Left:", color = colors.left}
       :color {id="rightColor", label="Right:", color = colors.right}
-      :color {id="highlightColor", label="Highlight:", color = colors.highlight}
-
-      :separator()
-      :radio {id="typeOne", label="Corner:", text="3 px", selected=use3pxCorner}
-      :radio {id="typeTwo", text="2 px", selected=not use3pxCorner}
 
       :separator()
       :button {id="ok", text="Add Box",onclick=function()
@@ -278,9 +290,9 @@ dlg   :separator{ text="Size:" }
             local cubeType = data.typeOne and 1 or 2
 
             newLayer("Cube("..data.xSize.." "..data.ySize.." "..data.zSize..")")
-            drawCube(cubeType, data.xSize, data.ySize, data.zSize, data.color)
+            drawCube(cubeType, data.xSize, data.ySize, data.zSize, data.color, data.topColor, data.leftColor, data.rightColor)
             fillCubeSides(data.topColor, data.leftColor, data.rightColor)
-            addHighlight(cubeType, data.xSize, data.ySize, data.zSize, data.highlightColor)
+            addHighlight(cubeType, data.xSize, data.ySize, data.zSize, data.topColor, data.leftColor)
           end)
           --Refresh screen
           app.command.Undo()
@@ -290,4 +302,3 @@ dlg   :separator{ text="Size:" }
       :show{wait=false}
 
 ---------------------------------------
-
